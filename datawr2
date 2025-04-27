@@ -1,0 +1,38 @@
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load Titanic dataset
+data = sns.load_dataset('titanic')
+
+# Step 2: Handle Missing Values
+data['age'].fillna(data['age'].median(), inplace=True)
+data['embarked'].fillna(data['embarked'].mode()[0], inplace=True)
+
+# Step 3: Handle Outliers
+Q1 = data['fare'].quantile(0.25)
+Q3 = data['fare'].quantile(0.75)
+IQR = Q3 - Q1
+
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Remove outliers
+data_cleaned = data[(data['fare'] >= lower_bound) & (data['fare'] <= upper_bound)]
+
+# Step 4: Apply Data Transformation - Log transformation on 'fare'
+sns.histplot(data['fare'], kde=True)
+plt.title('Fare Distribution (Before Log Transformation)')
+plt.show()
+
+data['fare_log'] = np.log(data['fare'] + 1)
+
+sns.histplot(data['fare_log'], kde=True)
+plt.title('Fare Distribution (After Log Transformation)')
+plt.show()
+
+# Check skewness before and after transformation
+print("Skewness of 'fare' before and after log transformation:")
+print("Before:", data['fare'].skew())
+print("After:", data['fare_log'].skew())
