@@ -1,0 +1,69 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.datasets import load_iris
+
+# Load the Iris dataset from sklearn
+iris = load_iris()
+
+# Convert it to a pandas DataFrame for easier manipulation
+data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+data['species'] = iris.target
+
+# Display the first few rows of the dataset
+print(data.head())
+
+# Separate features (X) and target variable (y)
+X = data.drop(columns=['species'])  # Features
+y = data['species']  # Target variable (species)
+
+# Split the data into training and test sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the Naive Bayes classifier
+nb_model = GaussianNB()
+
+# Train the model on the training data
+nb_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = nb_model.predict(X_test)
+
+# Compute the confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+print("\nConfusion Matrix:")
+print(cm)
+
+# Calculate TP, FP, TN, FN
+TP = cm[0, 0]  # True Positive
+FP = cm[0, 1]  # False Positive
+TN = cm[1, 1]  # True Negative
+FN = cm[1, 0]  # False Negative
+
+# Print TP, FP, TN, FN
+print(f"\nTrue Positive (TP): {TP}")
+print(f"False Positive (FP): {FP}")
+print(f"True Negative (TN): {TN}")
+print(f"False Negative (FN): {FN}")
+
+# Calculate Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"\nAccuracy: {accuracy * 100:.2f}%")
+
+# Calculate Error Rate
+error_rate = 1 - accuracy
+print(f"Error Rate: {error_rate * 100:.2f}%")
+
+# Calculate Precision
+precision = precision_score(y_test, y_pred, average='macro', zero_division=0)
+print(f"Precision: {precision:.2f}")
+
+# Calculate Recall
+recall = recall_score(y_test, y_pred, average='macro', zero_division=0)
+print(f"Recall: {recall:.2f}")
+
+# Calculate F1 Score
+f1 = f1_score(y_test, y_pred, average='macro', zero_division=0)
+print(f"F1-Score: {f1:.2f}")
