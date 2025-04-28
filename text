@@ -1,0 +1,66 @@
+# Step 1: Import Required Libraries
+import nltk
+import string
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.tokenize.treebank import TreebankWordDetokenizer
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Step 2: Download necessary NLTK resources
+nltk.download('punkt')  # For tokenization
+nltk.download('stopwords')  # For stop words
+nltk.download('averaged_perceptron_tagger')  # For POS tagging
+nltk.download('wordnet')  # For lemmatization
+
+# Step 3: Define a sample document
+document = """Natural language processing (NLP) is a subfield of artificial intelligence (AI) 
+that focuses on the interaction between computers and humans through natural language. 
+The ultimate goal is for computers to understand, interpret, and generate human language in a way that is both valuable and meaningful."""
+
+# Step 4: Tokenization
+tokens = word_tokenize(document)
+print("Tokens:", tokens)
+
+# Step 5: POS Tagging
+pos_tags = pos_tag(tokens)
+print("\nPOS Tags:", pos_tags)
+
+# Step 6: Stopwords Removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+print("\nTokens after Stopwords Removal:", filtered_tokens)
+
+# Step 7: Stemming
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
+print("\nStemmed Tokens:", stemmed_tokens)
+
+# Step 8: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+print("\nLemmatized Tokens:", lemmatized_tokens)
+
+# Step 9: Calculate Term Frequency (TF) and Inverse Document Frequency (IDF)
+# For this, we will create a corpus (list of documents) and use TfidfVectorizer
+corpus = [
+    """Natural language processing (NLP) is a subfield of artificial intelligence (AI) 
+    that focuses on the interaction between computers and humans through natural language.""",
+    """The ultimate goal is for computers to understand, interpret, and generate human language in a way that is both valuable and meaningful."""
+]
+
+# Initialize TF-IDF Vectorizer
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(corpus)
+
+# Get the feature names (words) corresponding to the columns of the TF-IDF matrix
+feature_names = vectorizer.get_feature_names_out()
+
+# Display the TF-IDF values for each word in the corpus
+print("\nTF-IDF Matrix:")
+print(X.toarray())
+
+# Display feature names
+print("\nFeature Names (Words):", feature_names)
