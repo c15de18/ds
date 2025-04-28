@@ -1,0 +1,27 @@
+# Step 1: Import libraries
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+# Step 2: Load dataset
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
+iris = pd.read_csv(url, names=columns)
+
+# Step 3: Data Preprocessing
+print("Missing Values:\n", iris.isnull().sum())
+print("\nData Description:\n", iris.describe())
+print("\nData Types:\n", iris.dtypes)
+print("\nData Shape:", iris.shape)
+
+# Step 4: Data Formatting
+iris['species'] = iris['species'].astype('category')
+
+# Step 5: Normalization
+iris['sepal_length_norm'] = (iris['sepal_length'] - iris['sepal_length'].min()) / (iris['sepal_length'].max() - iris['sepal_length'].min())
+
+# Step 6: Encoding categorical variable
+le = LabelEncoder()
+iris['species_encoded'] = le.fit_transform(iris['species'])
+
+# Final view
+print("\nUpdated Dataset:\n", iris.head())
