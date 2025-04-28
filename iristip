@@ -1,0 +1,36 @@
+import pandas as pd
+
+# Load your dataset
+tips = pd.read_csv('tips.csv')   # replace with your dataset file name
+
+# Group by 'sex' and compute summary statistics for 'total_bill' and 'tip'
+summary_stats = tips.groupby('sex')[['total_bill', 'tip']].agg(['mean', 'median', 'min', 'max', 'std'])
+
+display(summary_stats)
+
+# Create a list of 'total_bill' values grouped by 'sex'
+male_total_bill = tips[tips['sex'] == 'Male']['total_bill'].tolist()
+female_total_bill = tips[tips['sex'] == 'Female']['total_bill'].tolist()
+
+print("\nList of 'total_bill' for Male customers:", male_total_bill)
+print("\nList of 'total_bill' for Female customers:", female_total_bill)
+
+iris
+import pandas as pd
+
+# Load Iris dataset
+iris = pd.read_csv('iris.csv')
+
+# Check first few rows
+display(iris.head())
+
+# List of unique species
+species_list = iris['species'].unique()
+
+# For each species, print basic statistics
+for species in species_list:
+    print(f"\nStatistics for {species}:\n")
+    stats = iris[iris['species'] == species].describe(percentiles=[.25, .5, .75])
+    display(stats)
+
+
